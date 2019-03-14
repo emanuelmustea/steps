@@ -17,6 +17,7 @@
     right: 0px;
     bottom: inherit;
     height: 0px;
+    transition: all 1s ease-out 0s;
     background: var(--main-color);
   }
   .steps-root > .step,

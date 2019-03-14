@@ -27,7 +27,7 @@ body {
   bottom: 0px;
   width: 0px;
   background: var(--main-color);
-  transition: all 1s ease-in 0s;
+  transition: all 1s ease-out 0s;
 }
 
 .steps-root > .step,

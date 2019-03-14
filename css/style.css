@@ -1,0 +1,23 @@
+.container {
+  position: relative;
+  width: 60%;
+  top: 30px;
+  margin: auto;
+}
+.btn {
+  display: inline-block;
+  padding: 7px 14px;
+  background: var(--main-color);
+  border: 0px;
+  border-radius: 4px;
+  color: #fff;
+  outline: 0;
+  cursor: pointer;
+  margin: 2px;
+}
+.btn:nth-child(3n + 2) {
+  background: grey;
+}
+.btn:nth-child(4n + 1) {
+  background: grey;
+}
