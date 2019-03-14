@@ -1,0 +1,56 @@
+@media screen and (max-width: 640px) {
+  .container {
+    width: auto;
+  }
+  .steps-root {
+    flex-direction: column;
+    height: auto;
+    width: 3px !important;
+  }
+  .steps-root > div.completed-progress {
+    background: transparent;
+  }
+  .steps-root > div.completed-progress-mobile {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: inherit;
+    height: 0px;
+    background: var(--main-color);
+  }
+  .steps-root > .step,
+  .steps-root > .substep {
+    margin: 40px 0px;
+    left: -5px;
+  }
+  .steps-root > .step:nth-of-type(3),
+  .steps-root > .substep:nth-of-type(3) {
+    margin-top: 0;
+  }
+  .steps-root > .step:last-child,
+  .steps-root > .substep:last-child {
+    margin-bottom: -5px;
+  }
+  .steps-root > .substep {
+    width: 13px;
+    height: 7px;
+  }
+  .steps-root > div > .label {
+    left: 20px;
+    top: 0px;
+    transform: translateY(-50%);
+  }
+
+  .steps-root > div:last-child > .label {
+    transform: translateY(-50%);
+  }
+
+  .steps-root .tooltip {
+    right: -4px;
+  }
+  .steps-root > div .tooltip:after {
+    left: auto;
+    right: 6px;
+  }
+}

@@ -1,0 +1,133 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+}
+* {
+  box-sizing: border-box;
+}
+:root {
+  --main-color: #16a085;
+  --grey-color: #bdc3c7;
+  --dark-color: #2c3e50;
+  --danger-color: #c0392b;
+}
+.steps-root {
+  position: relative;
+  height: 3px;
+  background: var(--grey-color);
+  display: flex;
+  flex-direction: row;
+  box-shadow: 0px 0px 37px -6px rgba(0, 0, 0, 0.75);
+  margin: 50px auto !important;
+}
+.steps-root > div.completed-progress {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  width: 0px;
+  background: var(--main-color);
+  transition: all 1s ease-in 0s;
+}
+
+.steps-root > .step,
+.steps-root > .substep {
+  cursor: pointer;
+  position: relative;
+  text-align: center;
+  top: -5px;
+  width: 13px;
+  height: 13px;
+  border: 2px solid #fff;
+  border-radius: 9px;
+  margin: 0 auto;
+  background: var(--grey-color);
+  color: var(--grey-color);
+  transition: all 225ms linear;
+}
+.steps-root > .substep {
+  width: 7px;
+}
+.steps-root > .step.active,
+.steps-root > .substep.active {
+  transition: all 225ms linear 1s;
+  border: 2px solid var(--main-color);
+  background: #fff;
+  color: var(--main-color);
+}
+.steps-root > .step.valid,
+.steps-root > .substep.valid {
+  transition: all 225ms linear 1s;
+  border: 2px solid #fff;
+  background: var(--main-color);
+  color: var(--main-color);
+}
+.steps-root > .step.invalid,
+.steps-root > .substep.invalid {
+  transition: all 225ms linear 1s;
+  border: 2px solid #fff;
+  background: var(--danger-color);
+  color: var(--danger-color);
+}
+.steps-root > .step:nth-of-type(3),
+.steps-root > .substep:nth-of-type(3) {
+  margin-left: 0;
+}
+.steps-root > .step:last-child,
+.steps-root > .substep:last-child {
+  margin-right: 0;
+}
+.steps-root > div > .label {
+  position: absolute;
+  top: 10px;
+  width: fit-content;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+.steps-root > div:last-child > .label {
+  transform: translateX(50%);
+}
+.steps-root > .step:last-child > div,
+.steps-root > .substep:last-child > div {
+  right: -4px;
+}
+.steps-root > .step:nth-of-type(3) div,
+.steps-root > .substep::nth-of-type(3) div {
+  left: -4px;
+}
+.steps-root .tooltip {
+  position: absolute;
+  font-size: 13px;
+  transform: translateY(-60px);
+  margin-top: 30px;
+  width: fit-content;
+  white-space: nowrap;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--dark-color);
+  color: #fff;
+  transition: opacity 225ms;
+  opacity: 0;
+  box-shadow: 0px 0px 37px -6px rgba(0, 0, 0, 0.75);
+}
+.steps-root .tooltip:after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  bottom: -3px;
+  left: 6px;
+  transform: rotate(45deg);
+  background: var(--dark-color);
+}
+.steps-root > div:last-child .tooltip:after {
+  left: auto;
+  right: 6px;
+}
+.steps-root > div:hover > .tooltip {
+  opacity: 1;
+}
+.tooltip:hover {
+  cursor: default;
+  opacity: 0 !important;
+}

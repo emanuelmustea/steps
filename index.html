@@ -6,9 +6,83 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Steps Js Example</title>
     <link rel="stylesheet" href="css/steps.css" />
+    <link rel="stylesheet" href="css/steps-mobile.css" />
+    <style>
+      .container {
+        position: relative;
+        width: 60%;
+        top: 30px;
+        margin: auto;
+      }
+      .btn {
+        display: inline-block;
+        padding: 7px 14px;
+        background: var(--main-color);
+        border: 0px;
+        border-radius: 4px;
+        color: #fff;
+        outline: 0;
+        cursor: pointer;
+        margin: 2px;
+      }
+      .btn:nth-child(3n + 2) {
+        background: grey;
+      }
+      .btn:nth-child(4n + 1) {
+        background: grey;
+      }
+    </style>
   </head>
   <body>
-    <>
+    <div class="container steps"></div>
+    <div class="container">
+      <button class="btn" onclick="steps.prevStep()">Previous Step</button>
+      <button class="btn" onclick="steps.nextStep()">Next Step</button>
+      <button class="btn" onclick="steps.prevStep(true, true)">Previous Step(valid)</button>
+      <button class="btn" onclick="steps.nextStep(true, true)">Next Step(valid)</button>
+      <button class="btn" onclick="steps.prevStep(true, false)">Previous Step(invalid)</button>
+      <button class="btn" onclick="steps.nextStep(true, false)">Next Step(invalid)</button>
+    </div>
+    <br />
+    <div class="container">
+      <button class="btn" onclick="steps.prevStep(false)">Previous Substep</button>
+      <button class="btn" onclick="steps.nextStep(false)">Next Substep</button>
+      <button class="btn" onclick="steps.prevStep(false,true)">Previous Substep(valid)</button>
+      <button class="btn" onclick="steps.nextStep(false,true)">Next Substep(valid)</button>
+      <button class="btn" onclick="steps.prevStep(false,false)">Previous Substep(invalid)</button>
+      <button class="btn" onclick="steps.nextStep(false,false)">Next Substep(invalid)</button>
+    </div>
     <script src="js/steps.js"></script>
+    <script>
+      var steps = new Steps({
+        selector: ".container.steps",
+        steps: [
+          {
+            label: "Add to cart",
+            tooltip: "Choose your products and add them to the basket"
+          },
+          {
+            label: "Contact Informations",
+            tooltip: "Add your contact and delivery informations",
+            steps: [
+              {
+                label: "Personal Data"
+              },
+              {
+                label: "Delivery Data"
+              }
+            ]
+          },
+          {
+            label: "Confirm your Order"
+          },
+          {
+            label: "Order Completed",
+            tooltip: "At this point your order is processed"
+          }
+        ]
+      });
+      console.log(steps);
+    </script>
   </body>
 </html>
