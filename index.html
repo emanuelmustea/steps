@@ -12,26 +12,28 @@
   <body>
     <div class="container steps"></div>
     <div class="container">
-      <button class="btn" onclick="steps.prevStep()">Previous Step</button>
-      <button class="btn" onclick="steps.nextStep()">Next Step</button>
-      <button class="btn" onclick="steps.prevStep(true, true)">Previous Step(valid)</button>
-      <button class="btn" onclick="steps.nextStep(true, true)">Next Step(valid)</button>
-      <button class="btn" onclick="steps.prevStep(true, false)">Previous Step(invalid)</button>
-      <button class="btn" onclick="steps.nextStep(true, false)">Next Step(invalid)</button>
+      <button class="btn" onclick="steps.changeStep(true)">Previous Step</button>
+      <button class="btn" onclick="steps.changeStep()">Next Step</button>
+      <button class="btn" onclick="steps.changeStep(true, true, true)">Previous Step(valid)</button>
+      <button class="btn" onclick="steps.changeStep(false, true, true)">Next Step(valid)</button>
+      <button class="btn" onclick="steps.changeStep(true, true, false)">Previous Step(invalid)</button>
+      <button class="btn" onclick="steps.changeStep(false, true, false)">Next Step(invalid)</button>
     </div>
     <br />
     <div class="container">
-      <button class="btn" onclick="steps.prevStep(false)">Previous Substep</button>
-      <button class="btn" onclick="steps.nextStep(false)">Next Substep</button>
-      <button class="btn" onclick="steps.prevStep(false,true)">Previous Substep(valid)</button>
-      <button class="btn" onclick="steps.nextStep(false,true)">Next Substep(valid)</button>
-      <button class="btn" onclick="steps.prevStep(false,false)">Previous Substep(invalid)</button>
-      <button class="btn" onclick="steps.nextStep(false,false)">Next Substep(invalid)</button>
+      <button class="btn" onclick="steps.changeStep(true, false)">Previous Substep</button>
+      <button class="btn" onclick="steps.changeStep(false,false)">Next Substep</button>
+      <button class="btn" onclick="steps.changeStep(true, false,true)">Previous Substep(valid)</button>
+      <button class="btn" onclick="steps.changeStep(false, false,true)">Next Substep(valid)</button>
+      <button class="btn" onclick="steps.changeStep(true, false,false)">Previous Substep(invalid)</button>
+      <button class="btn" onclick="steps.changeStep(false, false,false)">Next Substep(invalid)</button>
     </div>
     <script src="js/steps.js"></script>
     <script>
       var steps = new Steps({
         selector: ".container.steps",
+        defaultValidator: true,
+        validateInOrder: false,
         steps: [
           {
             label: "Add to cart",
@@ -50,11 +52,13 @@
             ]
           },
           {
-            label: "Confirm your Order"
+            label: "Confirm your Order",
+            restrict: true
           },
           {
             label: "Order Completed",
-            tooltip: "At this point your order is processed"
+            tooltip: "At this point your order is processed",
+            restrict: true
           }
         ]
       });

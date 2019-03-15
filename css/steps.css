@@ -47,13 +47,14 @@ body {
 }
 .steps-root > .substep {
   width: 7px;
+  border-radius: 4px;
 }
 .steps-root > .step.active,
 .steps-root > .substep.active {
   transition: all 225ms linear 1s;
-  border: 2px solid var(--main-color);
-  background: #fff;
-  color: var(--main-color);
+  border: 2px solid var(--main-color) !important;
+  background: #fff !important;
+  color: var(--main-color) !important;
 }
 .steps-root > .step.valid,
 .steps-root > .substep.valid {

@@ -1,50 +1,87 @@
 class Steps {
-  constructor({ selector = null, steps = null, validateInOrder = true, navigateOnClick = !validateInOrder } = {}) {
+  constructor({ selector = null, steps = null, defaultValidator = false, validateInOrder = true, navigateOnClick = !validateInOrder } = {}) {
     this.rootElement = document.querySelector(selector);
     this.steps = steps;
     this.childElements = [];
     this.navigateOnClick = navigateOnClick;
     this.validateInOrder = validateInOrder;
+    this.defaultValidator = defaultValidator;
     this.createAllHTMLElements();
     this.changeActiveStep(0);
   }
   changeActiveStep(stepIndex) {
-    console.log("New index is", stepIndex);
     this.activeStep = stepIndex;
     this.childElements.map(childElement => childElement.stepContainer.classList.remove("active"));
-    this.childElements[stepIndex].stepContainer.classList.remove("valid");
-    this.childElements[stepIndex].stepContainer.classList.remove("invalid");
     this.childElements[stepIndex].stepContainer.classList.add("active");
-    this.changeCompletedProgressWidth(this.childElements[stepIndex].stepContainer);
+    this.changeProgressBarWidth(this.childElements[stepIndex].stepContainer);
   }
   completeStep(isValid) {
     let classValue = isValid ? "valid" : "invalid";
-    this.childElements[this.activeStep].stepContainer.classList.remove("valid");
-    this.childElements[this.activeStep].stepContainer.classList.remove("invalid");
-    console.log(classValue);
-    this.childElements[this.activeStep].stepContainer.classList.add(classValue);
+    this.CurrentElement.stepContainer.classList.remove("valid");
+    this.CurrentElement.stepContainer.classList.remove("invalid");
+    this.CurrentElement.stepContainer.classList.add(classValue);
+    this.CurrentElement.isValid = isValid;
   }
-  nextStep(skipSubsets = true, isValid) {
+  validateStep(isValid) {
     if (isValid != null || this.validateInOrder) {
+      isValid = isValid === null ? this.defaultValidator : isValid;
       this.completeStep(isValid);
     }
-    if (this.activeStep + 1 < this.childElements.length) {
-      this.changeActiveStep(this.activeStep + 1);
+  }
+  isStepInRange(reverse) {
+    return reverse ? this.activeStep > 0 : this.activeStep < this.childElements.length - 1;
+  }
+  decrementIncrementActiveStep(reverse) {
+    this.activeStep += reverse ? -1 : 1;
+  }
+  validateUntilPoint(point, isValid = this.defaultValidator) {
+    this.activeStep = 0;
+    while (this.activeStep < point) {
+      this.validateStep(isValid);
+      this.activeStep++;
     }
   }
-  prevStep(skipSubsets = true, isValid) {
-    if (isValid !== null) {
-      this.completeStep(isValid);
-    }
-    if (this.activeStep > 0) {
-      this.changeActiveStep(this.activeStep - 1);
+  moveToNextStep(reverse, isValid) {
+    this.decrementIncrementActiveStep(reverse);
+    while (this.CurrentElement.type === "substep") {
+      if ((this.validateInOrder && this.CurrentElement.valid == null) || isValid !== null) {
+        this.validateStep(isValid);
+      }
+      this.decrementIncrementActiveStep(reverse);
     }
   }
-  changeCompletedProgressWidth(stepContainer) {
-    this.completedProgressDesktopContainer.style.width = `${stepContainer.offsetLeft}px`;
-    this.completedProgressMobileContainer.style.height = `${stepContainer.offsetTop}px`;
+  changeStep(reverse = false, skipSubsets = true, isValid = null) {
+    this.validateStep(isValid);
+    if (this.isStepInRange(reverse)) {
+      if (!skipSubsets) {
+        this.decrementIncrementActiveStep(reverse);
+      } else {
+        this.moveToNextStep(reverse, isValid);
+      }
+    }
+    this.changeActiveStep(this.activeStep);
   }
-  createEachStepElements(stepData, parentElement = this.rootElement) {
+  changeToGivenStep(newStep) {
+    this.activeStep = newStep;
+    if (this.validateInOrder) {
+      this.validateUntilPoint(newStep);
+    }
+    this.changeActiveStep(this.activeStep);
+  }
+  changeProgressBarWidth(stepContainer) {
+    this.progressBarContainerDesktop.style.width = `${stepContainer.offsetLeft}px`;
+    this.progressBarContainerMobile.style.height = `${stepContainer.offsetTop}px`;
+  }
+  stepClick(stepObject, stepsFunction) {
+    let stepIndex = stepsFunction.childElements.indexOf(stepObject);
+    stepsFunction.changeToGivenStep(stepIndex);
+  }
+  buildClickListener(stepObject) {
+    stepObject.stepContainer.addEventListener("click", event => {
+      this.stepClick(stepObject, this);
+    });
+  }
+  createEachStepHTMLElements(stepData, parentElement = this.rootElement) {
     let stepContainer = this.createElementInContainer("div", parentElement);
     stepContainer.classList.add("step");
     let labelContainer = this.createElementInContainer("div", stepContainer);
@@ -56,39 +93,51 @@ class Steps {
       tooltipContainer.classList.add("tooltip");
       tooltipContainer.innerHTML = stepData.tooltip;
     }
+    let restricted = !stepData.restricted ? false : true;
     let stepObject = {
       stepContainer: stepContainer,
       labelContainer: labelContainer,
-      tooltipContainer: tooltipContainer
+      tooltipContainer: tooltipContainer,
+      isValid: null,
+      active: false,
+      type: "step",
+      restricted: restricted
     };
     this.childElements.push(stepObject);
     if (stepData.steps) {
       this.createSubstepElements(stepData.steps);
     }
+    if (this.navigateOnClick) {
+      this.buildClickListener(stepObject);
+    }
     return stepObject;
   }
   createSubstepElements(substeps) {
     for (let substep of substeps) {
-      let substepObject = this.createEachStepElements(substep);
+      let substepObject = this.createEachStepHTMLElements(substep);
       substepObject.stepContainer.classList.replace("step", "substep");
+      substepObject.type = "substep";
     }
   }
-  createCompletedProgressContainers() {
-    this.completedProgressDesktopContainer = this.createElementInContainer("div");
-    this.completedProgressMobileContainer = this.createElementInContainer("div");
-    this.completedProgressDesktopContainer.classList.add("completed-progress");
-    this.completedProgressMobileContainer.classList.add("completed-progress-mobile");
+  createProgressBarContainers() {
+    this.progressBarContainerDesktop = this.createElementInContainer("div");
+    this.progressBarContainerMobile = this.createElementInContainer("div");
+    this.progressBarContainerDesktop.classList.add("completed-progress");
+    this.progressBarContainerMobile.classList.add("completed-progress-mobile");
   }
   createAllHTMLElements() {
     this.rootElement.classList.add("steps-root");
-    this.createCompletedProgressContainers();
+    this.createProgressBarContainers();
     for (let stepData of this.steps) {
-      this.createEachStepElements(stepData);
+      this.createEachStepHTMLElements(stepData);
     }
   }
   createElementInContainer(elementType, container = this.rootElement) {
     let element = document.createElement(elementType);
     container.appendChild(element);
     return element;
+  }
+  get CurrentElement() {
+    return this.childElements[this.activeStep];
   }
 }
