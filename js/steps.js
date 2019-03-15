@@ -28,11 +28,11 @@ class Steps {
       this.completeStep(isValid);
     }
   }
-  isStepInRange(reverse) {
-    return reverse ? this.activeStep > 0 : this.activeStep < this.childElements.length - 1;
+  isStepInRange(inReverseDirection) {
+    return inReverseDirection ? this.activeStep > 0 : this.activeStep < this.childElements.length - 1;
   }
-  decrementIncrementActiveStep(reverse) {
-    this.activeStep += reverse ? -1 : 1;
+  decrementIncrementActiveStep(inReverseDirection) {
+    this.activeStep += inReverseDirection ? -1 : 1;
   }
   validateUntilPoint(point, isValid = this.defaultValidator) {
     this.activeStep = 0;
@@ -41,22 +41,22 @@ class Steps {
       this.activeStep++;
     }
   }
-  moveToNextStep(reverse, isValid) {
-    this.decrementIncrementActiveStep(reverse);
+  moveToNextStep(inReverseDirection, isValid) {
+    this.decrementIncrementActiveStep(inReverseDirection);
     while (this.CurrentElement.type === "substep") {
       if ((this.validateInOrder && this.CurrentElement.valid == null) || isValid !== null) {
         this.validateStep(isValid);
       }
-      this.decrementIncrementActiveStep(reverse);
+      this.decrementIncrementActiveStep(inReverseDirection);
     }
   }
-  changeStep(reverse = false, skipSubsets = true, isValid = null) {
+  changeStep(inReverseDirection = false, skipSubsteps = true, isValid = null) {
     this.validateStep(isValid);
-    if (this.isStepInRange(reverse)) {
-      if (!skipSubsets) {
-        this.decrementIncrementActiveStep(reverse);
+    if (this.isStepInRange(inReverseDirection)) {
+      if (!skipSubsteps) {
+        this.decrementIncrementActiveStep(inReverseDirection);
       } else {
-        this.moveToNextStep(reverse, isValid);
+        this.moveToNextStep(inReverseDirection, isValid);
       }
     }
     this.changeActiveStep(this.activeStep);
