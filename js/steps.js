@@ -16,11 +16,10 @@ class Steps {
     this.changeProgressBarWidth(this.childElements[stepIndex].stepContainer);
   }
   completeStep(isValid) {
-    let classValue = isValid ? "valid" : "invalid";
-    this.CurrentElement.stepContainer.classList.remove("valid");
-    this.CurrentElement.stepContainer.classList.remove("invalid");
-    this.CurrentElement.stepContainer.classList.add(classValue);
-    this.CurrentElement.isValid = isValid;
+    const classValue = isValid ? "valid" : "invalid";
+    this.currentElement.stepContainer.classList.remove("valid", "invalid");
+    this.currentElement.stepContainer.classList.add(classValue);
+    this.currentElement.isValid = isValid;
   }
   validateStep(isValid) {
     if (isValid != null || this.validateInOrder) {
@@ -31,7 +30,7 @@ class Steps {
   isStepInRange(inReverseDirection) {
     return inReverseDirection ? this.activeStep > 0 : this.activeStep < this.childElements.length - 1;
   }
-  decrementIncrementActiveStep(inReverseDirection) {
+  decrementOrIncrementActiveStep(inReverseDirection) {
     this.activeStep += inReverseDirection ? -1 : 1;
   }
   validateUntilPoint(point, isValid = this.defaultValidator) {
@@ -42,19 +41,19 @@ class Steps {
     }
   }
   moveToNextStep(inReverseDirection, isValid) {
-    this.decrementIncrementActiveStep(inReverseDirection);
-    while (this.CurrentElement.type === "substep") {
-      if ((this.validateInOrder && this.CurrentElement.valid == null) || isValid !== null) {
+    this.decrementOrIncrementActiveStep(inReverseDirection);
+    while (this.currentElement.type === "substep") {
+      if ((this.validateInOrder && this.currentElement.valid == null) || isValid !== null) {
         this.validateStep(isValid);
       }
-      this.decrementIncrementActiveStep(inReverseDirection);
+      this.decrementOrIncrementActiveStep(inReverseDirection);
     }
   }
-  changeStep(inReverseDirection = false, skipSubsteps = true, isValid = null) {
+  changeStep({ inReverseDirection = false, skipSubsteps = true, isValid = null } = {}) {
     this.validateStep(isValid);
     if (this.isStepInRange(inReverseDirection)) {
       if (!skipSubsteps) {
-        this.decrementIncrementActiveStep(inReverseDirection);
+        this.decrementOrIncrementActiveStep(inReverseDirection);
       } else {
         this.moveToNextStep(inReverseDirection, isValid);
       }
@@ -73,7 +72,7 @@ class Steps {
     this.progressBarContainerMobile.style.height = `${stepContainer.offsetTop}px`;
   }
   stepClick(stepObject, stepsFunction) {
-    let stepIndex = stepsFunction.childElements.indexOf(stepObject);
+    const stepIndex = stepsFunction.childElements.indexOf(stepObject);
     stepsFunction.changeToGivenStep(stepIndex);
   }
   buildClickListener(stepObject) {
@@ -82,9 +81,9 @@ class Steps {
     });
   }
   createEachStepHTMLElements(stepData, parentElement = this.rootElement) {
-    let stepContainer = this.createElementInContainer("div", parentElement);
+    const stepContainer = this.createElementInContainer("div", parentElement);
     stepContainer.classList.add("step");
-    let labelContainer = this.createElementInContainer("div", stepContainer);
+    const labelContainer = this.createElementInContainer("div", stepContainer);
     labelContainer.classList.add("label");
     labelContainer.innerHTML = stepData.label;
     let tooltipContainer = null;
@@ -93,15 +92,15 @@ class Steps {
       tooltipContainer.classList.add("tooltip");
       tooltipContainer.innerHTML = stepData.tooltip;
     }
-    let restricted = !stepData.restricted ? false : true;
-    let stepObject = {
-      stepContainer: stepContainer,
-      labelContainer: labelContainer,
-      tooltipContainer: tooltipContainer,
+    const restricted = stepData.restricted === null ? false : stepData.restricted;
+    const stepObject = {
+      stepContainer,
+      labelContainer,
+      tooltipContainer,
+      restricted,
       isValid: null,
       active: false,
-      type: "step",
-      restricted: restricted
+      type: "step"
     };
     this.childElements.push(stepObject);
     if (stepData.steps) {
@@ -114,7 +113,7 @@ class Steps {
   }
   createSubstepElements(substeps) {
     for (let substep of substeps) {
-      let substepObject = this.createEachStepHTMLElements(substep);
+      const substepObject = this.createEachStepHTMLElements(substep);
       substepObject.stepContainer.classList.replace("step", "substep");
       substepObject.type = "substep";
     }
@@ -133,11 +132,11 @@ class Steps {
     }
   }
   createElementInContainer(elementType, container = this.rootElement) {
-    let element = document.createElement(elementType);
+    const element = document.createElement(elementType);
     container.appendChild(element);
     return element;
   }
-  get CurrentElement() {
+  get currentElement() {
     return this.childElements[this.activeStep];
   }
 }

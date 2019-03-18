@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Steps Js Example</title>
     <link rel="stylesheet" href="css/style.css" />
@@ -12,21 +12,21 @@
   <body>
     <div class="container steps"></div>
     <div class="container">
-      <button class="btn" onclick="steps.changeStep(true)">Previous Step</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection: true})">Previous Step</button>
       <button class="btn" onclick="steps.changeStep()">Next Step</button>
-      <button class="btn" onclick="steps.changeStep(true, true, true)">Previous Step(valid)</button>
-      <button class="btn" onclick="steps.changeStep(false, true, true)">Next Step(valid)</button>
-      <button class="btn" onclick="steps.changeStep(true, true, false)">Previous Step(invalid)</button>
-      <button class="btn" onclick="steps.changeStep(false, true, false)">Next Step(invalid)</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : true, skipSubsteps : true, isValid : true })">Previous Step(valid)</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : false, skipSubsteps : true, isValid : true })">Next Step(valid)</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : true, skipSubsteps : true, isValid : false })">Previous Step(invalid)</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : false, skipSubsteps : true, isValid : false })">Next Step(invalid)</button>
     </div>
     <br />
     <div class="container">
-      <button class="btn" onclick="steps.changeStep(true, false)">Previous Substep</button>
-      <button class="btn" onclick="steps.changeStep(false,false)">Next Substep</button>
-      <button class="btn" onclick="steps.changeStep(true, false,true)">Previous Substep(valid)</button>
-      <button class="btn" onclick="steps.changeStep(false, false,true)">Next Substep(valid)</button>
-      <button class="btn" onclick="steps.changeStep(true, false,false)">Previous Substep(invalid)</button>
-      <button class="btn" onclick="steps.changeStep(false, false,false)">Next Substep(invalid)</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : true, skipSubsteps : false})">Previous Substep</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : false, skipSubsteps : false })">Next Substep</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : true, skipSubsteps : false, isValid : true })">Previous Substep(valid)</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : false, skipSubsteps : false, isValid : true })">Next Substep(valid)</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : true, skipSubsteps : false, isValid : false })">Previous Substep(invalid)</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : false, skipSubsteps : false, isValid : false })">Next Substep(invalid)</button>
     </div>
     <script src="js/steps.js"></script>
     <script>
@@ -62,7 +62,6 @@
           }
         ]
       });
-      console.log(steps);
     </script>
   </body>
 </html>
