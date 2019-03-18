@@ -2,13 +2,66 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Steps Js Example</title>
+    <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/steps.css" />
+    <link rel="stylesheet" href="css/steps-mobile.css" />
   </head>
   <body>
-    <>
+    <div class="container steps"></div>
+    <div class="container">
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection: true})">Previous Step</button>
+      <button class="btn" onclick="steps.changeStep()">Next Step</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : true, skipSubsteps : true, isValid : true })">Previous Step(valid)</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : false, skipSubsteps : true, isValid : true })">Next Step(valid)</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : true, skipSubsteps : true, isValid : false })">Previous Step(invalid)</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : false, skipSubsteps : true, isValid : false })">Next Step(invalid)</button>
+    </div>
+    <br />
+    <div class="container">
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : true, skipSubsteps : false})">Previous Substep</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : false, skipSubsteps : false })">Next Substep</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : true, skipSubsteps : false, isValid : true })">Previous Substep(valid)</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : false, skipSubsteps : false, isValid : true })">Next Substep(valid)</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : true, skipSubsteps : false, isValid : false })">Previous Substep(invalid)</button>
+      <button class="btn" onclick="steps.changeStep({ inReverseDirection : false, skipSubsteps : false, isValid : false })">Next Substep(invalid)</button>
+    </div>
     <script src="js/steps.js"></script>
+    <script>
+      var steps = new Steps({
+        selector: ".container.steps",
+        defaultValidator: true,
+        navigateOnClick: true,
+        steps: [
+          {
+            label: "Add to cart",
+            tooltip: "Choose your products and add them to the basket"
+          },
+          {
+            label: "Contact Informations",
+            tooltip: "Add your contact and delivery informations",
+            steps: [
+              {
+                label: "Personal Data"
+              },
+              {
+                label: "Delivery Data"
+              }
+            ]
+          },
+          {
+            label: "Confirm your Order",
+            restrict: true
+          },
+          {
+            label: "Order Completed",
+            tooltip: "At this point your order is processed",
+            restrict: true
+          }
+        ]
+      });
+    </script>
   </body>
 </html>
